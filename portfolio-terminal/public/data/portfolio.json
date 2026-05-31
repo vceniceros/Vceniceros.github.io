@@ -21,9 +21,9 @@
   ],
   "projects": [
     {
-        "name": "consorcio360",
-        "description": "a comprehensive property management system designed to streamline the administration of residential and commercial properties, offering features such as tenant management, maintenance scheduling, and financial reporting, built with angular and django.",
-        "github": "https://github.com/vceniceros/consorcio-360"
+      "name": "consorcio360",
+      "description": "a comprehensive property management system designed to streamline the administration of residential and commercial properties, offering features such as tenant management, maintenance scheduling, and financial reporting, built with angular and django.",
+      "github": "https://github.com/vceniceros/consorcio-360"
     },
     {
       "name": "futbol-5-manager",
@@ -41,9 +41,14 @@
       "github": "https://github.com/vceniceros/portfolio-terminal"
     },
     {
-      "name": "crm.ycc.group",
+      "name": "crm",
       "description": "A production CRM platform used at YCC to organize operational tasks, assign responsibilities, and track internal workflow execution in one centralized system.",
-      "github": "https://crm.ycc.group"
+      "github": "https://github.com/vceniceros/crm"
+    },
+    {
+      "name": "utilities",
+      "description": "A repository of modular Python scripts and terminal-based tools built to automate workflows, manipulate data, and agilely resolve operational and infrastructure problems.",
+      "github": "https://github.com/vceniceros/utilities"
     }
   ],
   "languages": [
@@ -51,23 +56,29 @@
       "name": "TypeScript",
       "description": "Primary language for Angular frontend applications and typed backend services.",
       "projects": [
-        "portfolio-terminal", "consorcio-360", "teko-pora-upgrade", "crm.ycc.group"
+        "portfolio-terminal",
+        "consorcio-360",
+        "teko-pora-upgrade",
+        "crm"
       ],
       "proficiency": "Intermediate"
     },
     {
-        "name": "Java",
-        "description": "Used for backend development in Spring Boot applications, focusing on RESTful APIs and microservices.",
-        "projects": [
-            "futbol-5-manager"
-        ],
-        "proficiency": "Advanced"
+      "name": "Java",
+      "description": "Used for backend development in Spring Boot applications, focusing on RESTful APIs and microservices.",
+      "projects": [
+        "futbol-5-manager"
+      ],
+      "proficiency": "Advanced"
     },
     {
       "name": "Python",
       "description": "Utilized for scripting, automation, and backend development in Django applications.",
       "projects": [
-        "consorcio-360", "starlink bus management system", "crm.ycc.group"
+        "consorcio-360",
+        "starlink bus management system",
+        "crm",
+        "utilities"
       ],
       "proficiency": "Advanced"
     },
@@ -75,11 +86,12 @@
       "name": "SQL",
       "description": "Proficient in designing and querying relational databases for various applications.",
       "projects": [
-        "consorcio-360", "futbol-5-manager", "crm.ycc.group"
+        "consorcio-360",
+        "futbol-5-manager",
+        "crm"
       ],
       "proficiency": "Advanced"
     }
-
   ],
   "contact": {
     "email": "vceniceros@gmail.com",
