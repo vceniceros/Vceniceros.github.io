@@ -1,0 +1,98 @@
+name: Deploy Angular to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      base_href: ${{ steps.base_href.outputs.value }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: portfolio-terminal/package-lock.json
+
+      - name: Install dependencies
+        working-directory: portfolio-terminal
+        run: npm ci
+
+      - name: Resolve deploy base href
+        id: base_href
+        working-directory: portfolio-terminal
+        run: |
+          if [[ "${{ github.event.repository.name }}" == *.github.io ]]; then
+            echo "value=/" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=/${{ github.event.repository.name }}/" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build application
+        working-directory: portfolio-terminal
+        run: npx ng build --base-href "${{ steps.base_href.outputs.value }}" --deploy-url "${{ steps.base_href.outputs.value }}"
+
+      - name: Create SPA fallback
+        working-directory: portfolio-terminal
+        run: cp dist/portfolio-terminal/browser/index.html dist/portfolio-terminal/browser/404.html
+
+      - name: Verify built routes
+        working-directory: portfolio-terminal
+        run: |
+          grep -F "<base href=\"${{ steps.base_href.outputs.value }}\">" dist/portfolio-terminal/browser/index.html
+          test -f dist/portfolio-terminal/browser/404.html
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: portfolio-terminal/dist/portfolio-terminal/browser
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Verify deployed page responds
+        run: |
+          set -euo pipefail
+          page_url="${{ steps.deployment.outputs.page_url }}"
+          status_code=$(curl -s -o /dev/null -w "%{http_code}" "$page_url")
+
+          if [[ "$status_code" -lt 200 || "$status_code" -ge 400 ]]; then
+            echo "Deployment URL is not healthy: $page_url (status $status_code)"
+            exit 1
+          fi
+
+      - name: Verify deployed base href
+        run: |
+          set -euo pipefail
+          page_url="${{ steps.deployment.outputs.page_url }}"
+          expected_base="${{ needs.build.outputs.base_href }}"
+
+          html=$(curl -sL "$page_url")
+          echo "$html" | grep -F "<base href=\"$expected_base\">"
